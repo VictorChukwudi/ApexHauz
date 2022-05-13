@@ -10,6 +10,7 @@ app.use(express.json())
 
 app.use('/api/v1/auth', require('./src/routes/auth'))
 app.use('/api/v1/property', require('./src/routes/property'))
+
 app.listen(port,()=>{
     console.log('connected to port 5000');
 })

@@ -50,8 +50,50 @@ const sign_up=(req,res)=>{
 }
 
 
+//Sign in Controller
 const sign_in=(req,res)=>{
-    res.send('signin')
+    const {email,password}=req.body;
+    //Checking for email and password entered
+    if(!email && !password){
+        res.status(400).json({
+            message:'All fields required'
+        })
+    }
+    //Finding user in database
+    User.findByEmail(email,(err,user)=>{
+        if (err){
+            res.status(500).json({
+                status:'Error',
+                message:'Server error'
+            })
+        }
+        if(!user){
+            res.status(200).json({
+                status:'success',
+                message:'user not found'
+            })
+        }
+        bcrypt.compare(password,user.password,(err,isMatch)=>{
+            if(err){
+                console.log(err);
+            }
+            if (isMatch){
+            jwt.sign({id:user.id,email:user.email},process.env.secret_key,(err,token)=>{
+                res.status(201).json({
+                    status:'success',
+                    token:token,
+                    data:{
+                    id: user.id,
+                    first_name:user.firstname,
+                    last_name:user.lastname,
+                    email:user.email
+                            }
+                        })
+                })
+            }
+        })
+    })
+    
 }
 
 module.exports={
