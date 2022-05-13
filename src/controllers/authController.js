@@ -29,8 +29,9 @@ const sign_up=(req,res)=>{
             })
         }
 
+        
          // Generating JWT token
-         jwt.sign({id: user.id, email: user.email}, process.env.secret_key,(err,token)=>{
+         jwt.sign({id:user.id,password:user.password}, process.env.secret_key,(err,token)=>{
 
             // Data sent when the endpoint is successful
         res.status(201).json({
@@ -78,7 +79,7 @@ const sign_in=(req,res)=>{
                 console.log(err);
             }
             if (isMatch){
-            jwt.sign({id:user.id,email:user.email},process.env.secret_key,(err,token)=>{
+            jwt.sign({id:user.id,password:user.password},process.env.secret_key,(err,token)=>{
                 res.status(201).json({
                     status:'success',
                     token:token,
