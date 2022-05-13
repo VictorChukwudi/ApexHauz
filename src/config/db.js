@@ -30,7 +30,7 @@ db.connect((err)=>{
     //creating users table
     var sql=`CREATE TABLE IF NOT EXISTS users 
     (id INT AUTO_INCREMENT, 
-    email VARCHAR(30), 
+    email VARCHAR(30) UNIQUE, 
     firstname VARCHAR(20), 
     lastname VARCHAR(20), 
     password VARCHAR(255), 
@@ -46,13 +46,14 @@ db.connect((err)=>{
     //creating property table
     var sql=`CREATE TABLE IF NOT EXISTS properties (prop_id INT AUTO_INCREMENT,
     owner_id INT, 
-    status VARCHAR(100), 
+    status VARCHAR(100)  DEFAULT 'available', 
     price FLOAT, 
-    state VARCHAR(255), 
+    state VARCHAR(255)  , 
     city VARCHAR(255), 
     address VARCHAR(255),
     type VARCHAR(255), 
     image_url VARCHAR(255), 
+    cloudinary_id VARCHAR(255),
     created_on DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY(prop_id),
     FOREIGN KEY (owner_id) REFERENCES users(id) ON UPDATE CASCADE ON DELETE CASCADE)`;

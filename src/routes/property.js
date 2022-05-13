@@ -7,5 +7,6 @@ const upload = require('../utils/multer')
 
 router.post('/',verifyToken, upload.single('image'),propertyController.create_prop)
 
+router.patch('/:id',verifyToken, upload.single('image'),propertyController.updateProperty)
 
 module.exports=router
