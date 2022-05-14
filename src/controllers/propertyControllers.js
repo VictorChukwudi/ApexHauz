@@ -26,6 +26,29 @@ const findAllProperty = (req, res) => {
   });
 };
 
+const findPropertyByQuery = (req, res) => {
+  const { type } = req.query;
+  Property.findPropertyByQuery(type, (err, items) => {
+    if (err) {
+      res.status(500).json({
+        status: "Error",
+        message: "Error occurred when retrieving properties",
+      });
+    }
+    if (items.length < 1) {
+      res.status(404).json({
+        status: "Error",
+        message: `${type} properties are not available `,
+      });
+    } else {
+      res.status(200).json({
+        status: "success",
+        data: items,
+      });
+    }
+  });
+};
+
 const create_prop = (req, res) => {
   let owner_id = req.user.id;
   //   console.log(req.user.id);
@@ -228,9 +251,10 @@ const findProperty = (req, res) => {
   });
 };
 module.exports = {
+  findAllProperty,
+  findProperty,
+  findPropertyByQuery,
   create_prop,
   updateProperty,
   deleteProperty,
-  findProperty,
-  findAllProperty,
 };

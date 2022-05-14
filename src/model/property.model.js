@@ -81,17 +81,17 @@ class Property {
     );
   }
 
-  static findAllProperty(result){
-      let sql='SELECT * FROM properties';
-      db.query(sql,(err,res)=>{
-          if (err){
-            console.log("Error: ", err);
-            result(err, null);
-            return;
-          }
-          console.log("Properties :",res);
-          result(null,res)
-      })
+  static findAllProperty(result) {
+    let sql = "SELECT * FROM properties";
+    db.query(sql, (err, res) => {
+      if (err) {
+        console.log("Error: ", err);
+        result(err, null);
+        return;
+      }
+      console.log("Properties :", res);
+      result(null, res);
+    });
   }
 
   static findPropertyById(id, result) {
@@ -105,6 +105,24 @@ class Property {
       if (res) {
         console.log("Property found: ", res[0]);
         result(null, res[0]);
+        return;
+      }
+      console.log("Property not flound");
+      result({ kind: "not_found" }, null);
+    });
+  }
+
+  static findPropertyByQuery(type, result) {
+    let sql = "SELECT * FROM properties WHERE type= ?";
+    db.query(sql, [type], (err, res) => {
+      if (err) {
+        console.log("Error: ", err);
+        result(err, null);
+        return;
+      }
+      if (res) {
+        console.log("Property found: ", res);
+        result(null, res);
         return;
       }
       console.log("Property not flound");

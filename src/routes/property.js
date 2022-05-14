@@ -5,7 +5,6 @@ const verifyToken = require("../middleware/authMiddleware");
 
 const upload = require("../utils/multer");
 
-
 router.post(
   "/",
   verifyToken,
@@ -13,8 +12,11 @@ router.post(
   propertyController.create_prop
 );
 
-router.get('/',propertyController.findAllProperty)
-router.get('/:id',propertyController.findProperty)
+router.get("/", propertyController.findAllProperty);
+
+router.get("/search", propertyController.findPropertyByQuery);
+
+router.get("/:id", propertyController.findProperty);
 
 router.patch(
   "/:id",
