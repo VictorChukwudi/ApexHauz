@@ -4,11 +4,34 @@ const db = require("../model/property.model");
 const cloudinary = require("../utils/cloudinary");
 const upload = require("../utils/multer");
 
+const findAllProperty = (req, res) => {
+  Property.findAllProperty((err, items) => {
+    if (err) {
+      res.status(500).json({
+        status: "Error",
+        message: "Error occurred when retrieving properties",
+      });
+    }
+    if (items.length < 1) {
+      res.status(404).json({
+        status: "Error",
+        message: "There are no properties at this time.",
+      });
+    } else {
+      res.status(200).json({
+        status: "success",
+        data: items,
+      });
+    }
+  });
+};
+
 const create_prop = (req, res) => {
   let owner_id = req.user.id;
-//   console.log(req.user.id);
+  //   console.log(req.user.id);
   if (!req.body) {
     res.status(400).json({
+      status: "Error",
       message: "All fields must be filled",
     });
   }
@@ -48,14 +71,14 @@ const create_prop = (req, res) => {
     Property.createProperty(property, (err, prop) => {
       if (err) {
         res.status(500).json({
-          status: "failed",
+          status: "Error",
           message: "Error occured while creating property",
         });
       }
-     res.status(200).json({
-         status:'success',
-         data:prop
-     });
+      res.status(200).json({
+        status: "success",
+        data: prop,
+      });
     });
   });
 };
@@ -191,17 +214,16 @@ const findProperty = (req, res) => {
         message: "Error while retrieving property",
       });
     }
-    if(!item){
-        res.status(404).json({
-            status: "Error",
-            message: "Property does not exits",
-          })
-    }
-    else{
-        res.status(200).json({
-            status: "success",
-            data: item,
-          });
+    if (!item) {
+      res.status(404).json({
+        status: "Error",
+        message: "Property does not exits",
+      });
+    } else {
+      res.status(200).json({
+        status: "success",
+        data: item,
+      });
     }
   });
 };
@@ -210,4 +232,5 @@ module.exports = {
   updateProperty,
   deleteProperty,
   findProperty,
+  findAllProperty,
 };

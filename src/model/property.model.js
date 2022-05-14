@@ -81,6 +81,19 @@ class Property {
     );
   }
 
+  static findAllProperty(result){
+      let sql='SELECT * FROM properties';
+      db.query(sql,(err,res)=>{
+          if (err){
+            console.log("Error: ", err);
+            result(err, null);
+            return;
+          }
+          console.log("Properties :",res);
+          result(null,res)
+      })
+  }
+
   static findPropertyById(id, result) {
     let sql = "SELECT * FROM properties WHERE prop_id= ?";
     db.query(sql, [id], (err, res) => {

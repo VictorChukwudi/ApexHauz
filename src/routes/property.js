@@ -13,7 +13,7 @@ router.post(
   propertyController.create_prop
 );
 
-
+router.get('/',propertyController.findAllProperty)
 router.get('/:id',propertyController.findProperty)
 
 router.patch(
