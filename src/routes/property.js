@@ -5,12 +5,16 @@ const verifyToken = require("../middleware/authMiddleware");
 
 const upload = require("../utils/multer");
 
+
 router.post(
   "/",
   verifyToken,
   upload.single("image"),
   propertyController.create_prop
 );
+
+
+router.get('/:id',propertyController.findProperty)
 
 router.patch(
   "/:id",

@@ -6,7 +6,7 @@ const upload = require("../utils/multer");
 
 const create_prop = (req, res) => {
   let owner_id = req.user.id;
-  console.log(req.user.id);
+//   console.log(req.user.id);
   if (!req.body) {
     res.status(400).json({
       message: "All fields must be filled",
@@ -52,14 +52,10 @@ const create_prop = (req, res) => {
           message: "Error occured while creating property",
         });
       }
-      Property.findPropertyByOwnerId(property.owner_id, (err, result) => {
-        if (err) {
-          throw err;
-        }
-        res.status(200).json({
-          ...result,
-        });
-      });
+     res.status(200).json({
+         status:'success',
+         data:prop
+     });
     });
   });
 };
@@ -185,8 +181,33 @@ const deleteProperty = (req, res) => {
     }
   });
 };
+
+const findProperty = (req, res) => {
+  const id = req.params.id;
+  Property.findPropertyById(id, (err, item) => {
+    if (err) {
+      res.status(500).json({
+        status: "Error",
+        message: "Error while retrieving property",
+      });
+    }
+    if(!item){
+        res.status(404).json({
+            status: "Error",
+            message: "Property does not exits",
+          })
+    }
+    else{
+        res.status(200).json({
+            status: "success",
+            data: item,
+          });
+    }
+  });
+};
 module.exports = {
   create_prop,
   updateProperty,
   deleteProperty,
+  findProperty,
 };
