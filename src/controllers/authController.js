@@ -6,6 +6,7 @@ const sign_up = (req, res) => {
   // check if sign_up data is given
   if (!req.body) {
     res.status(400).json({
+      status:"Error",
       message: "Content cannot be empty",
     });
   }
@@ -13,51 +14,67 @@ const sign_up = (req, res) => {
   let { email, firstname, lastname, password, phone, address, is_admin } =
     req.body;
 
-  //Encrypting Password
-  bcrypt.genSalt(10, (err, salt) => {
-    bcrypt.hash(password, salt, (err, hash) => {
-      password = hash;
+    User.findByEmail(email,(err,user)=>{
+      if(err){
+        res.status(500).json({
+          status: "Error",
+          message: "Server Error",
+        });
+      }
+      if(user){
+        res.status(400).json({
+          status: "Error",
+          message: "Email has already been used",
+        });
+      }
+      else{
+//Encrypting Password
+bcrypt.genSalt(10, (err, salt) => {
+  bcrypt.hash(password, salt, (err, hash) => {
+    password = hash;
 
-      const user = new User(
-        email,
-        firstname,
-        lastname,
-        password,
-        phone,
-        address,
-        is_admin
-      );
+    const user = new User(
+      email,
+      firstname,
+      lastname,
+      password,
+      phone,
+      address,
+      is_admin
+    );
 
-      //Creating new user
-      User.create(user, (err, user) => {
-        if (err) {
-          res.status(500).json({
-            status: "failed",
-            message: "Email has already been used",
+    //Creating new user
+    User.create(user, (err, user) => {
+      if (err) {
+        res.status(500).json({
+          status: "Error",
+          message: "Error occured when creating user",
+        });
+      }
+
+      // Generating JWT token
+      jwt.sign(
+        { id: user.id, password: user.password },
+        process.env.secret_key,
+        (err, token) => {
+          // Data sent when the endpoint is successful
+          res.status(201).json({
+            status: "success",
+            token: token,
+            data: {
+              id: user.id,
+              first_name: user.firstname,
+              last_name: user.lastname,
+              email: user.email,
+            },
           });
         }
-
-        // Generating JWT token
-        jwt.sign(
-          { id: user.id, password: user.password },
-          process.env.secret_key,
-          (err, token) => {
-            // Data sent when the endpoint is successful
-            res.status(201).json({
-              status: "success",
-              token: token,
-              data: {
-                id: user.id,
-                first_name: user.firstname,
-                last_name: user.lastname,
-                email: user.email,
-              },
-            });
-          }
-        );
-      });
+      );
     });
   });
+});
+      }
+    })
 };
 
 //Sign in Controller
