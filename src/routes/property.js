@@ -27,4 +27,6 @@ router.patch(
 
 router.delete("/:id", verifyToken, propertyController.deleteProperty);
 
+router.patch("/:id/sold", verifyToken, propertyController.markAsSold);
+
 module.exports = router;

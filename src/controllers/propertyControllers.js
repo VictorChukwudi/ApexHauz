@@ -73,9 +73,7 @@ const create_prop = (req, res) => {
     // Status is set to available if undefined
     //That is, by default , it is  available
 
-    if (typeof status === "undefined") {
-      status = "available";
-    }
+    status = "available";
 
     let property = new Property(
       owner_id,
@@ -98,9 +96,15 @@ const create_prop = (req, res) => {
           message: "Error occured while creating property",
         });
       }
-      res.status(200).json({
-        status: "success",
-        data: prop,
+      Property.findCurrentPropertyInserted((err, item) => {
+        if (err) {
+          console.log(err);
+          return;
+        }
+        res.status(200).json({
+          status: "success",
+          data: item,
+        });
       });
     });
   });
@@ -186,6 +190,50 @@ const updateProperty = (req, res) => {
   });
 };
 
+const markAsSold = (req, res) => {
+  const id = req.params.id;
+
+  Property.findPropertyById(id, (err, item) => {
+    if (err) {
+      res.status(500).json({
+        state: "Error",
+        message: "Server Error",
+      });
+    }
+    if (!item) {
+      res.status(400).json({
+        status: "Error",
+        message: `Cannot find property with prop_i: ${id}`,
+      });
+    } else {
+      item.status = "sold";
+      const soldProp = new Property(
+        item.owner_id,
+        item.status,
+        item.price,
+        item.state,
+        item.city,
+        item.address,
+        item.type,
+        item.image_url,
+        item.cloudinary_id
+      );
+      Property.updatePropertyById(id, soldProp, (err, result) => {
+        if (err) {
+          res.status(500).json({
+            state: "Error",
+            message: "Server Error",
+          });
+        }
+        res.status(200).json({
+          state: "Success",
+          data: item,
+        });
+      });
+    }
+  });
+};
+
 const deleteProperty = (req, res) => {
   const id = req.params.id;
 
@@ -256,5 +304,6 @@ module.exports = {
   findPropertyByQuery,
   create_prop,
   updateProperty,
+  markAsSold,
   deleteProperty,
 };

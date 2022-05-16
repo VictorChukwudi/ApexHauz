@@ -130,17 +130,17 @@ class Property {
     });
   }
 
-  static findPropertyByOwnerId(id, result) {
-    let sql = "SELECT * FROM properties WHERE owner_id= ?";
-    db.query(sql, [id], (err, res) => {
+  static findCurrentPropertyInserted(result) {
+    let sql = "SELECT * FROM properties ORDER BY prop_id DESC LIMIT 1";
+    db.query(sql, (err, res) => {
       if (err) {
         console.log("Error: ", err);
         result(err, null);
         return;
       }
       if (res) {
-        console.log("Property found: ", res[0]);
-        result(null, res[0]);
+        console.log("Property found: ", ...res);
+        result(null, ...res);
         return;
       }
       console.log("Property not flound");
