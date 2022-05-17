@@ -157,13 +157,13 @@ const updateProperty = (req, res) => {
           const propUpdate = new Property(
             req.user.id,
             item.status,
-            price,
-            state,
-            city,
-            address,
-            type,
-            image_url,
-            cloudinary_id
+            price || item.price,
+            state || item.state,
+            city || item.city,
+            address || item.address,
+            type || item.type,
+            image_url || item.image_url,
+            cloudinary_id 
           );
 
           Property.updatePropertyById(
