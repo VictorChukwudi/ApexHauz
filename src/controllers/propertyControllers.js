@@ -148,7 +148,7 @@ const updateProperty = (req, res) => {
         let image_url = result.secure_url || item.secure_url;
         let cloudinary_id = result.public_id || item.cloudinary_id;
 
-        if (!price || !state || !city || !address || !type) {
+        if (!price || !state || !city || !address || !type){
           res.status(400).json({
             status: "Error",
             message: "All fields must be filled",
@@ -162,7 +162,7 @@ const updateProperty = (req, res) => {
             city || item.city,
             address || item.address,
             type || item.type,
-            image_url || item.image_url,
+            image_url,
             cloudinary_id 
           );
 
