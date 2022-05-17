@@ -16,6 +16,6 @@ A user signs in with an email and his/her password.
 ## Creating Property Advert
 Authenticated users create property adverts with the following: price, state, city, address, type and image.
 ## Updating Property Advert
-Authenticated users can update their property adverts.
+Authenticated users can update their property adverts. Using POSTMAN , the fields used to create the property advert are all required even when only some are updated.
 
 ### Authenticated users can also mark their property as sold and also delete their property adverts.
